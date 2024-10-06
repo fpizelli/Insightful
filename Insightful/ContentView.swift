@@ -10,12 +10,34 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Spacer()
+            
+            Text("Hello!")
+                .font(.title.bold())
+                
+            Text("Another hello!")
+                .font(.subheadline)
+            
+            Spacer()
+            
+            HStack {
+                Button("Tap for more", action: { })
+                
+                Spacer()
+                
+                Button(action: { }) {
+                    Image(systemName: "bookmark")
+                }
+                .accessibilityLabel("Bookmark quote")
+                
+                
+                Button(action: { }) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Share quote")
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
