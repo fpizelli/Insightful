@@ -8,15 +8,35 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var quoteData: QuoteData?
+    
+    var formattedQuote: String {
+        guard let quote = quoteData?.quote.lowercased() else {
+            return "this is a nice and inspiring quote"
+        }
+        
+        return quote.hasSuffix(".") ? String(quote.dropLast()) : quote
+    }
+    
+    var formattedAuthor: String {
+        guard let author = quoteData?.author.lowercased() else {
+            return "the nice and inspiring quote author's"
+        }
+        
+        return author
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("\u{201c}")
                 .font(.custom("HelveticaNeue-CondensedBlack", size: 90))
                 .padding(.top, -20)
                 .padding(.bottom, 10)
+            
             Spacer()
             
-            Text("Lorem ipsum dolor, dolor lorem ipsum! Lorem ipsum dolor!")
+            Text(formattedQuote)
                 .font(.system(
                     size: 32,
                     weight: .light,
@@ -24,7 +44,7 @@ struct ContentView: View {
                 .lineSpacing(5)
                 .padding(.bottom, 20)
                 
-            Text("another hello!")
+            Text(formattedAuthor)
                 .font(.system(
                     size: 20,
                     weight: .bold,
@@ -36,9 +56,13 @@ struct ContentView: View {
             Spacer()
             
             HStack {
-                Button("tap for more", action: { })
-                    .foregroundStyle(.primary)
-                    .font(.title2)
+                Button("tap for more") {
+                    Task {
+                        await fetchNewQuote()
+                    }
+                }
+                .foregroundStyle(.primary)
+                .font(.title2)
                 
                 Spacer()
                 
@@ -59,6 +83,23 @@ struct ContentView: View {
         }
         .padding(.vertical, 10)
         .padding(.horizontal, 30)
+        .task {
+            await fetchNewQuote()
+        }
+    }
+    
+    private func fetchNewQuote() async {
+        do {
+            quoteData = try await getQuote()
+        } catch QDError.invalidURL {
+            print("Invalid URL!")
+        } catch QDError.invalidResponse {
+            print("Invalid response!")
+        } catch QDError.invalidData {
+            print("Invalid data!")
+        } catch {
+            print("Unexpected error!")
+        }
     }
 }
 
