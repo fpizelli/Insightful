@@ -12,19 +12,21 @@ struct ContentView: View {
     @State private var quoteData: QuoteData?
     
     var formattedQuote: String {
-        guard let quote = quoteData?.quote.lowercased() else {
+        guard let quote = quoteData?.quote.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) else {
             return "this is a nice and inspiring quote"
         }
         
-        return quote.hasSuffix(".") ? String(quote.dropLast()) : quote
-    }
-    
-    var formattedAuthor: String {
-        guard let author = quoteData?.author.lowercased() else {
-            return "the nice and inspiring quote author's"
+        var cleanedQuote = quote
+        
+        while cleanedQuote.hasSuffix(".") || cleanedQuote.hasSuffix("!") || cleanedQuote.hasSuffix("!!") || cleanedQuote.hasSuffix("!!!") {
+            cleanedQuote.removeLast()
         }
         
-        return author
+        return cleanedQuote
+    }
+
+    var formattedAuthor: String {
+        quoteData?.author.lowercased() ?? "the nice and inspiring quote author's"
     }
     
     var body: some View {
