@@ -66,19 +66,15 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Button(action: { }) {
-                    Image(systemName: "bookmark")
+                var formattedData: String {
+                    return "\(formattedQuote)\n\n\(formattedAuthor)"
                 }
-                .accessibilityLabel("Bookmark quote")
-                .foregroundStyle(.primary)
-                .font(.title2)
-                                
-                Button(action: { }) {
-                    Image(systemName: "square.and.arrow.up")
+                
+                ShareLink(item: formattedData) {
+                    Label("", systemImage: "square.and.arrow.up")
                 }
-                .accessibilityLabel("Share quote")
-                .foregroundStyle(.primary)
-                .font(.title2)
+                    .foregroundStyle(.primary)
+                    .font(.title2)
             }
         }
         .padding(.vertical, 10)
